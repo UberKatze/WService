@@ -2,7 +2,7 @@
 /**
 * The Core of WService
 * Model. Handlers for request must end with word 'Handler'. Handlers returns any associative array
-* @version 0.1
+* @version 0.1.1
 * @author Eugene Kosarev 
 */
 /* Copyright © 2013 Eugene Kosarev <euko@ukr.net>
@@ -50,7 +50,7 @@ class WSModel{
 			return array('Error'=>'Call to undefined Request Handler: '.($Request==$this->DefalutRequestHandler?'Default Request Handler':str_ireplace('Handler','',$Request)));
 		}
 		else {
-			$this->LastRequest=str_ireplace('Handler','',$Request);
+			$this->LastRequest=strtolower(str_ireplace('Handler','',$Request));
 		}
 				
 		//execute Request Handler
