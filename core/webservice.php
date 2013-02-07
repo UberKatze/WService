@@ -2,7 +2,7 @@
 /**
 * The Core of WService
 * Mediator - Centralized entry point
-* @version 0.1
+* @version 0.1.1
 * @author Eugene Kosarev 
 */
 /* Copyright © 2013 Eugene Kosarev <euko@ukr.net>
@@ -114,8 +114,9 @@ class Webservice {
 		
 		$this->Parameters=$this->Model->getRequests();		
 		
-		foreach ($this->Parameters as $Handler=>$value) {
+		foreach ($this->Parameters as $Handler=>$value) {			
 			unset($this->Parameters[$Handler]);
+			$Handler=strtolower($Handler);
 			if (count($this->RequiredParameters!=0)) {
 				$this->Parameters[$Handler]['required']=$this->RequiredParameters;
 			}
@@ -130,20 +131,20 @@ class Webservice {
 				$this->Parameters[$Handler]['optional']=array();
 			}			
 		}
-		foreach ($this->HandlersParameters as $Handler=>$Parameters) {			
+		foreach ($this->HandlersParameters as $Handler=>$Parameters) {
+			$Handler=strtolower($Handler);
 			if (isset($this->Parameters[$Handler]['required'])) $this->Parameters[$Handler]['required']=array_merge($this->Parameters[$Handler]['required'],is_array($Parameters['required'])?$Parameters['required']:array());
 			if (isset($this->Parameters[$Handler]['optional'])) $this->Parameters[$Handler]['optional']=array_merge($this->Parameters[$Handler]['optional'],is_array($Parameters['optional'])?$Parameters['optional']:array());
 		}
 		
 		if ($this->Request!='') {
-			$this->Controller->optionalParameters=$this->Parameters[$this->Request]['optional'];
-			$this->Controller->requiredParameters=$this->Parameters[$this->Request]['required'];
+			$this->Controller->optionalParameters=$this->Parameters[strtolower($this->Request)]['optional'];
+			$this->Controller->requiredParameters=$this->Parameters[strtolower($this->Request)]['required'];
 		}
 		else {
 			$this->Controller->optionalParameters=$this->OptionalParameters;
 			$this->Controller->requiredParameters=$this->RequiredParameters;
-		}
-		
+		}		
 		
 		/* Kinda some magic */
 		if (isset($_REQUEST['_struct_xml'])) {
